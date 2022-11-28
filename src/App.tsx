@@ -1,34 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
+
+import { SelectionHeader } from "./components/SelectionHeader";
+import { List } from "./components/List";
+import { Container } from "./App.styles";
+import { isPrimitive } from "./utils";
+
+import { test1, test2 } from "./mocks";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedIndexList, setSelectedIndexList] = useState<number[]>([]);
+
+  const handleOnChange = (e: CheckboxChangeEvent) => {
+    const value = parseInt(e.target.value);
+
+    setSelectedIndexList((prevValue) =>
+      prevValue.includes(value)
+        ? prevValue.filter((item) => item !== value)
+        : [...prevValue, value]
+    );
+  };
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    <Container>
+      <SelectionHeader selectedItems={selectedIndexList} />
+      <List
+        data={test2}
+        selectedIndexList={selectedIndexList}
+        onChange={handleOnChange}
+        renderInfoSection={(data) => {
+          return (
+            <>
+              {!isPrimitive(data)
+                ? Object.values(data!).map((dataItem, index) => {
+                    return (
+                      <div key={index}>
+                        {JSON.stringify(dataItem).replace(/['"]+/g, "")}
+                      </div>
+                    );
+                  })
+                : data}
+            </>
+          );
+        }}
+      />
+    </Container>
+  );
 }
 
-export default App
+export default App;
