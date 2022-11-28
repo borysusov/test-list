@@ -9,5 +9,9 @@ interface ISelectionHeader {
 export const SelectionHeader: React.FC<ISelectionHeader> = ({
   selectedItems,
 }) => {
-  return <Container>{`Selected items: ${selectedItems.join(', ')}`}</Container>;
+  return (
+    <Container>{`Selected items: ${
+      selectedItems.length > 0 ? selectedItems.join(", ") : "No items selected"
+    }`}</Container>
+  );
 };

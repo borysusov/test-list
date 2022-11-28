@@ -3,7 +3,7 @@ import { Checkbox } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 
 import { JSONData } from "../../types";
-import { Container } from "./List.styles";
+import { Container, Row, CheckboxWrapper, InfoWrapper } from "./List.styles";
 
 interface IListProps {
   data: JSONData;
@@ -18,29 +18,22 @@ export const List: React.FC<IListProps> = ({
   selectedIndexList,
   renderInfoSection,
 }) => {
-  if (!Array.isArray(data)) return null;
-
-  // const onChange = (e: CheckboxChangeEvent) => {
-  //   console.log(`checked = ${e.target.checked}`);
-  // };
-
-  // console.log(selectedIndexList);
-  console.log(selectedIndexList);
+  if (!Array.isArray(data)) return <Container>Wrong JSON format</Container>;
 
   return (
     <Container>
       {data.map((item, index) => {
         return (
-          <div key={index}>
-            <div>
+          <Row key={index}>
+            <CheckboxWrapper>
               <Checkbox
                 onChange={onChange}
                 checked={selectedIndexList.includes(index)}
                 value={index}
               />
-            </div>
-            <div>{renderInfoSection(item)}</div>
-          </div>
+            </CheckboxWrapper>
+            <InfoWrapper>{renderInfoSection(item)}</InfoWrapper>
+          </Row>
         );
       })}
     </Container>

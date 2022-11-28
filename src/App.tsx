@@ -1,12 +1,12 @@
 import { useState } from "react";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
-// import "./App.css";
-
-import { test1, test2 } from "./mocks";
 
 import { SelectionHeader } from "./components/SelectionHeader";
 import { List } from "./components/List";
-// import { Container } from "./components/List/List.styles"
+import { Container } from "./App.styles";
+import { isPrimitive } from "./utils";
+
+import { test1, test2 } from "./mocks";
 
 function App() {
   const [selectedIndexList, setSelectedIndexList] = useState<number[]>([]);
@@ -22,7 +22,7 @@ function App() {
   };
 
   return (
-    <div>
+    <Container>
       <SelectionHeader selectedItems={selectedIndexList} />
       <List
         data={test2}
@@ -31,14 +31,20 @@ function App() {
         renderInfoSection={(data) => {
           return (
             <>
-              {Object.values(data!).map((dataItem, index) => {
-                return <div key={index}>{dataItem}</div>;
-              })}
+              {!isPrimitive(data)
+                ? Object.values(data!).map((dataItem, index) => {
+                    return (
+                      <div key={index}>
+                        {JSON.stringify(dataItem).replace(/['"]+/g, "")}
+                      </div>
+                    );
+                  })
+                : data}
             </>
           );
         }}
       />
-    </div>
+    </Container>
   );
 }
 
